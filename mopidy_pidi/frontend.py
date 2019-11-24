@@ -137,7 +137,7 @@ class PiDi():
         self._brainz = Brainz(cache_dir=self.cache_dir)
         self._display = self.display_class(self.display_config)
         self._running = threading.Event()
-        self._delay = 1.0 / 30
+        self._delay = 1.0 / 4
         self._thread = None
 
         self.shuffle = False
@@ -197,7 +197,8 @@ class PiDi():
             self._last_elapsed_value = kwargs['elapsed']
 
     def _loop(self):
-        while self._running.wait(self._delay):
+        while self._running.is_set():
+            time.sleep(self._delay)
             if self.state == 'play':
                 t_elapsed_ms = (time.time() - self._last_elapsed_update) * 1000
                 self.elapsed = float(self._last_elapsed_value + t_elapsed_ms)
